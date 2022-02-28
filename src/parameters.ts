@@ -29,10 +29,15 @@ export const getHasuraEnvVars = (rawEnvVars: string) => {
     .map(rawEnvVar => {
       const envMetadata = rawEnvVar.trim().split(';')
       if (envMetadata.length > 0) {
-        const [key, value = ''] = envMetadata[0].trim().split('=')
-        return {
-          key,
-          value
+        const envVarPatternMatches = envMetadata[0]
+          .trim()
+          .match(/([^{=]+)=([^,}]+)/)
+        if (envVarPatternMatches) {
+          const [key, value] = envVarPatternMatches.slice(-2)
+          return {
+            key,
+            value
+          }
         }
       }
       return {
